@@ -2,9 +2,9 @@
 #include<stdlib.h>
 #include<time.h>
 
-#define NRA 550
-#define NCA 550
-#define NCB 550
+#define NRA 400
+#define NCA 400
+#define NCB 400
 
 int main(int argc, char *argv[]) 
 {
