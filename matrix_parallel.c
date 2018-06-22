@@ -24,17 +24,17 @@ int main(int argc, char* argv[])
     {
         int i, j, k;
         double matrix_a[NRA][NCA],matrix_b[NCA][NCB], matrix_c[NRA][NCB];
-
+        double vector_a[NCA], vector_b[NCB], vector_c[NCB];
         for (i = 0; i < NRA; i++)
         {
             for (j = 0; j < NCA; j++)
                 matrix_a[i][j] = i + j;
         }
 
-        for (i = 0; i < NCA; i++)
+        for (j = 0; j < NCB; j++)
         {
-            for (j = 0; j < NCA; j++)
-                matrix_b[i][j] = i * j;
+            for (i = 0; i < NCA; i++)
+                matrix_b[j][i] = i * j;
 
         }
         for (i = 0; i < NRA; i++)
@@ -42,8 +42,10 @@ int main(int argc, char* argv[])
                 printf("%f\n", matrix_a[i][j]);
 
         printf("\n\n");
-        
-            MPI_Send(matrix_a+4, NRA, MPI_DOUBLE, 1, tag, MPI_COMM_WORLD);
+        for (i = 1; i < size; i++)  
+        {    MPI_Send(matrix_a + i, NRA, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+             MPI_Send(matrix_b + i, NCA, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+        }
     }
     
             
@@ -51,12 +53,20 @@ int main(int argc, char* argv[])
     {
         double vector_a[NRA], vector_b[NRA], vector_c[NRA];
         MPI_Recv(vector_a, NRA, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+        MPI_Recv(vector_b, NCA, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
         for (int i = 0; i < NRA; i++) 
         {
-            printf("%f      \n", vector_a[i]);
-        }   
+            printf("processor:%d  %f      \n", my_rank,vector_a[i]);
+        }
+        for (int i = 0; i < NCA; i++)
+        {
+            printf("processor:%d  %f      \n", my_rank, vector_b[i]);
+        }
+        
+        
+        
     }
 
     MPI_Finalize();
 }
-
+  
