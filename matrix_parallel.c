@@ -3,9 +3,9 @@
 #include<stdlib.h>
 #include<time.h>
 
-#define NRA 400
-#define NCA 400
-#define NCB 400
+#define NRA 5
+#define NCA 5
+#define NCB 5
 int main(int argc, char* argv[])
 {
     int my_rank;
@@ -37,8 +37,13 @@ int main(int argc, char* argv[])
                 matrix_b[i][j] = i * j;
 
         }
+        for (i = 0; i < NRA; i++)
+            for (j = 0; j < NRA; j++)
+                printf("%f\n", matrix_a[i][j]);
+
+        printf("\n\n");
         
-            MPI_Send(matrix_a, NRA, MPI_DOUBLE, 1, tag, MPI_COMM_WORLD);
+            MPI_Send(matrix_a+4, NRA, MPI_DOUBLE, 1, tag, MPI_COMM_WORLD);
     }
     
             
