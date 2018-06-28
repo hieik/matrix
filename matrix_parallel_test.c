@@ -19,8 +19,11 @@ int main(int argc, char* argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    clock_t begin,end;
-    
+    if (size % 2 != 0) {
+        if (my_rank == 0)
+            printf("np is %d, np must satifies np %% 2 == 0\n", size); 
+        exit(1); 
+    }    
     if (my_rank == 0) 
     {
         int i, j, k;
