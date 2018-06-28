@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
     if (size % 2 != 0) {
         if (my_rank == 0)
-            printf("np is %d, np must satifies np %% 2 == 0\n", size); 
+            printf("np is %d, np must satify np %% 2 == 0\n", size); 
         exit(1); 
     }    
     if (my_rank == 0) 
