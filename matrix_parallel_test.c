@@ -13,6 +13,7 @@ int main(int argc, char* argv[])
     int source;
     int dest;
     int tag = 0;
+    double starttime, endtime;
     MPI_Status status;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
@@ -37,7 +38,8 @@ int main(int argc, char* argv[])
                 matrix_b[j][i] = i + j;
 
         }
-        for (i = 1; i < NCA; i++)  
+        starttime = MPI_Wtime();
+        for (i = 1; i < size; i++)  
         {
              MPI_Send(matrix_a + i, NRA, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
              MPI_Send(matrix_b, NCA*NCB, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
@@ -54,6 +56,7 @@ int main(int argc, char* argv[])
         {
             MPI_Recv(matrix_c + i, NCB, MPI_DOUBLE, i, tag, MPI_COMM_WORLD, &status);
         } 
+        endtime = MPI_Wtime();
         for (i = 0; i < NRA; i++) 
         {
             for (j = 0; j < NCB; j++) 
@@ -63,6 +66,7 @@ int main(int argc, char* argv[])
             printf("\n");
     
         }
+        printf("time = %f\n", endtime - starttime);
     }        
     if (my_rank != 0) 
     {
