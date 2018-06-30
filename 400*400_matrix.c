@@ -131,7 +131,6 @@ int main(int argc, char* argv[])
             row_number = base_number + 1;
             row = my_rank * (base_number + 1);
         }
-        printf("processor %d row_number %d, row %d extra_number%d\n",my_rank, row_number, row, extra_number );
         MPI_Recv(matrix_a + row, length, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_b, NCA*NCB, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
         for (i = row; i < row + row_number; i++)
