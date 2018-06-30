@@ -14,19 +14,20 @@ int main(int argc, char* argv[])
     int dest;
     int tag = 0;
     double starttime, endtime;
+    int base_number;
+    int extra_number;
+    int real_number;
     MPI_Status status;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    if (size % 2 != 0) {
-        if (my_rank == 0)
-            printf("np is %d, np must satify np %% 2 == 0\n", size); 
-        exit(1); 
-    }    
+    base_number = NCA / size;
+    extra_number = NCA - base_number * size;
+  
     if (my_rank == 0) 
     {
         int i, j, k;
+        int row = 0;
         double matrix_a[NRA][NCA],matrix_b[NCA][NCB], matrix_c[NRA][NCB];
         double vector_a[NCA], vector_b[NCB], vector_c[NCB];
         for (i = 0; i < NRA; i++)
@@ -42,10 +43,27 @@ int main(int argc, char* argv[])
 
         }
         starttime = MPI_Wtime();
+        if (extra_number > 0)
+            real_number = base_number + 1;
+        else
+            real_number = base_number;
+        int length = 0;
+          
         for (i = 1; i < size; i++)  
         {
-             MPI_Send(matrix_a + i, NRA, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+             if (i > extra_number - 1)
+             {
+                 length = NRA * base_number;
+                 row += base_number;
+             }
+             else
+             {
+                 length = NRA * (base_number + 1);
+                 row += base_number + 1;
+             }
+             MPI_Send(matrix_a + row, length , MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
              MPI_Send(matrix_b, NCA*NCB, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+             
         }
         for (i = 0; i < NCA; i++) 
         {
@@ -64,21 +82,37 @@ int main(int argc, char* argv[])
         {
             for (j = 0; j < NCB; j++) 
             {
-                printf("%f ", matrix_c[i][j]);
+                printf("matrix[%d][%d]: %f\nb ", i, j, matrix_c[i][j]);
             }
-            printf("\n");
     
         }
         printf("time = %f\n", endtime - starttime);
     }        
     if (my_rank != 0) 
     {
+        int length = 0;
+        int row;
+        int row_number;
         int i, j;
         double vector_a[NCA], matrix_b[NCA][NCB], vector_c[NCB];
-        MPI_Recv(vector_a, NRA, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
-        MPI_Recv(matrix_b, NCA*NCB, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
-        for (i = 0; i < NCA; i ++)
+        if (my_rank > extra_number - 1) 
         {
+            length = NRA * base_number;
+            row_number = base_number;
+            row = extra_number * base_number + (my_rank - extra_number);
+        }
+        else
+        {
+            length = NRA * (base_number + 1);
+            row_number = base_number + 1;
+            row = my_rank * (base_number + 1);
+        }
+        printf("processor%d %d %d\n", my_rank, row_number, row);
+        MPI_Recv(vector_a, length, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+        MPI_Recv(matrix_b, NCA*NCB, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+        for (i = 0; i < NCA; i++)
+        {
+            
             vector_c[i] = 0;
             for (j = 0; j < NCB; j++)
             {
