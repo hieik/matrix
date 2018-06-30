@@ -136,7 +136,6 @@ int main(int argc, char* argv[])
                 for (k = 0; k < NCB; k++)
                 {
                     matrix_c[i][j] += matrix_a[i][k] * matrix_b[k][j];
-
                 }
             }
         }
