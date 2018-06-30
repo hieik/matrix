@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
         {
             for (i = 0; i < NCA; i++)
                 matrix_b[j][i] = i + j;
-
         }
         starttime = MPI_Wtime();
         if (extra_number > 0)
@@ -140,7 +139,6 @@ int main(int argc, char* argv[])
             }
         }
         MPI_Send(matrix_c + row, length, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD);
-        
     }
     MPI_Finalize();
 }
