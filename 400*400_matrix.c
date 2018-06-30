@@ -1,7 +1,5 @@
 #include<mpi.h>
 #include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
 
 #define NRA 400
 #define NCA 400
