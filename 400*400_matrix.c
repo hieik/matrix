@@ -65,7 +65,6 @@ int main(int argc, char* argv[])
              }
              MPI_Send(matrix_a + row, length , MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
              MPI_Send(matrix_b, NCA*NCB, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
-             
         }
         for (i = 0; i < real_number; i++) 
         {
@@ -77,7 +76,6 @@ int main(int argc, char* argv[])
                     matrix_c[i][j] += matrix_a[i][k] * matrix_b[k][j]; 
                 }
             }
-         
         }
         for (i = 1; i < size; i++)
         {
@@ -103,7 +101,6 @@ int main(int argc, char* argv[])
             {
                 printf("matrix[%d][%d]: %f\n ", i, j, matrix_c[i][j]);
             }
-    
         }
         printf("time = %f\n", endtime - starttime);
     }        
@@ -142,8 +139,6 @@ int main(int argc, char* argv[])
 
                 }
             }
-
-            
         }
         MPI_Send(matrix_c + row, length, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD);
         
