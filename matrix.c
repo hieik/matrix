@@ -21,8 +21,8 @@ int main(int argc, char *argv[])
     for (i = 0; i < NCA; i++)
     {
         for (j = 0; j < NCB; j++)
-            b[i][j] = i * j;
-           // b[i][j] = i + j;
+//            b[i][j] = i * j;
+            b[i][j] = i + j;
     }
     begin = clock();
     for (k = 0; k < NCB; k++)
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     {
         printf("\n");
         for (j = 0; j < NCB; j++)
-            printf("%6.2f   \n ", c[i][j]);
+            printf("matrix[%d][%d]:%f   \n ", i, j, c[i][j]);
     }
     printf("%fs",(double)(end-begin)/CLOCKS_PER_SEC);
     printf("\n");
